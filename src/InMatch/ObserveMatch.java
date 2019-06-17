@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import AddStatus.Add;
+import Record.Record;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -41,8 +42,11 @@ public class ObserveMatch extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private Timer t;
-	public  int count;
-//	private JLabel myLabel = new Add().goalTime;
+	private int count=0 ;
+	public int countMe;
+	
+	
+	
 		private final Action action = new SwingAction();
 
 	/**
@@ -65,12 +69,31 @@ public class ObserveMatch extends JFrame {
 	 * Create the frame.
 	 */
 	public ObserveMatch() {
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 600);
+		setBounds(100, 100, 900, 601);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JButton btnNewButton = new JButton("Record");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Record().show();
+			}
+		});
+		
+		JButton button_4 = new JButton("Record");
+		button_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Record().show();
+			}
+		});
+		button_4.setBounds(751, 180, 76, 24);
+		contentPane.add(button_4);
+		btnNewButton.setBounds(150, 181, 76, 24);
+		contentPane.add(btnNewButton);
 		
 		JButton button_3 = new JButton("-");
 		button_3.setToolTipText("^");
@@ -120,28 +143,36 @@ public class ObserveMatch extends JFrame {
 		footballTimer.setForeground(Color.WHITE);
 		footballTimer.setBounds(456, 37, 64, 67);
 		contentPane.add(footballTimer);
-//		contentPane.add(myLabel);
+		
 
 		
 		JButton btnNewButton_1 = new JButton("Starts");
 		btnNewButton_1.setBackground(new Color(0, 204, 0));
-		btnNewButton_1.addActionListener(new ActionListener() {
+				ActionListener myAc=new ActionListener() {
+					
 			public void actionPerformed(ActionEvent e) {
-				count=0;
-			t = new Timer(10000, new ActionListener() {
+			ActionListener mine1=new ActionListener() {
+               
+				
+				
+				public int countMe;
+				
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					
 					count++;
 					footballTimer.setText(count+"");
 //					myLabel.setText(count+"");
+					countMe = count;
+					System.out.println(countMe);
 				}
-				});
+				};
+			t = new Timer(10000, mine1);
 			t.start();
 			}
-		});
+		};
+		btnNewButton_1.addActionListener(myAc);
 		btnNewButton_1.setAction(action);
 		btnNewButton_1.setBounds(431, 97, 42, 22);
 		contentPane.add(btnNewButton_1);
@@ -168,6 +199,13 @@ public class ObserveMatch extends JFrame {
 		textField.setColumns(10);
 		
 		JEditorPane editorPane = new JEditorPane();
+		editorPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				new Add().show();
+				
+			}
+		});
 		editorPane.setBounds(284, 203, 25, 22);
 		editorPane.setForeground(Color.WHITE);
 		editorPane.setBackground(Color.BLACK);

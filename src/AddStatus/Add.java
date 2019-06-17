@@ -2,6 +2,7 @@ package AddStatus;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -76,15 +77,12 @@ public class Add extends JFrame {
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(297, 291, 65, 61);
 		contentPane.add(panel_3);
-		
-		
+//		int myLast = new ObserveMatch().ActionListener().actionPerformed().countMe;
+
 		 goalTime = new JLabel("");
 		goalTime.setBounds(97, 30, 61, 16);
 		contentPane.add(goalTime);
-		int myAddLabel =new ObserveMatch().count;
-		String myLabelString = String.valueOf(myAddLabel);
-		goalTime.setText(myLabelString);
-
+		//goalTime.setText(myLast+"");
 //		public getGt() {
 //		}
 		
