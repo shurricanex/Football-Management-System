@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import InMatch.ObserveMatch;
+//import InMatch.ObserveMatch;
 
 import java.awt.Color;
 import javax.swing.JTextArea;
