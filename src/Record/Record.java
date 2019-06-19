@@ -12,10 +12,15 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
-public class Record extends JFrame {
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+public class Record extends JFrame {
+   
 	private JPanel contentPane;
 	private JTextField textField;
+	
 
 	/**
 	 * Launch the application.
@@ -72,6 +77,17 @@ public class Record extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnNewButton_1 = new JButton("Confirm");
+//		btnNewButton_1.addMouseListener(new MouseAdapter() {
+//			
+////			public void mouseClicked(MouseEvent e) {
+////				
+////					frame.dispose();
+////				
+////			}
+//		});
+	
+		
+		
 		btnNewButton_1.setBounds(141, 323, 117, 29);
 		panel.add(btnNewButton_1);
 		
@@ -116,4 +132,12 @@ public class Record extends JFrame {
 		panel_2.setBounds(30, 231, 331, 73);
 		panel.add(panel_2);
 	}
+	private void keyPressed(KeyEvent evt) {
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER) {
+         System.out.println("Entered and close");
+        	
+
+        }
+        };
+		
 }

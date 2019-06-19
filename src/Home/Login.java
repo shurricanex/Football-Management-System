@@ -28,6 +28,15 @@ public class Login {
 	private JFrame frame;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
+    
+	private void  keyPressed(KeyEvent evt) {
+		if(evt.getKeyCode()==KeyEvent.VK_ENTER) {
+			
+			new Menu().show();
+
+		}
+	}
+
 
 	/**
 	 * Launch the application.
@@ -102,7 +111,13 @@ public class Login {
 					if(rs.next()) {
 						//Show new form 
 						JOptionPane.showMessageDialog(frame, "Login Success");
+//						new Login().frame.setVisible(false);
+						
+						frame.dispose();
 						new Menu().show();
+						
+
+						
 					}
 					else {
 						JOptionPane.showMessageDialog(frame, "Incorrect username or password","Error login", 2);
@@ -113,7 +128,9 @@ public class Login {
 				}
 				
 			}
+			
 		});
+		
 		btnLogin.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -164,4 +181,4 @@ public class Login {
 		btnSignUp.setBounds(569, 445, 191, 75);
 		frame.getContentPane().add(btnSignUp);
 	}
-}
+	}
