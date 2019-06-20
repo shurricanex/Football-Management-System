@@ -1,7 +1,6 @@
 package Home;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -102,6 +101,7 @@ public class Login {
 					if(rs.next()) {
 						//Show new form 
 						JOptionPane.showMessageDialog(frame, "Login Success");
+						frame.dispose();
 						new Menu().show();
 					}
 					else {
@@ -142,8 +142,8 @@ public class Login {
 		JButton btnSignUp = new JButton("Sign Up");
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SignUp signup = new SignUp();
-				signup.setVisible(true);
+				SignUp signUp= new SignUp();
+				signUp.setVisible(true);
 			}
 		});
 		btnSignUp.addFocusListener(new FocusAdapter() {
