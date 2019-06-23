@@ -14,9 +14,15 @@ import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
+import Fixture.AddMatch;
+import Fixture.MatchInfo;
+import Hok.Addmember;
 import Home.DBconnection;
+import Home.SignUp;
 import Record.Record;
+import net.proteanit.sql.DbUtils;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
@@ -39,6 +45,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JTabbedPane;
@@ -48,7 +55,7 @@ import javax.swing.table.DefaultTableModel;
 //import net.proteanit.sql.DbUtils;
 
 public class Menu extends JFrame {
-
+   
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -56,6 +63,7 @@ public class Menu extends JFrame {
 	private int count=0 ;
 	public int countMe;
 	private JTable table;
+	public JTable tableMatch2;
 	private JTable table_1;
 	private JTable table_3;
 	private JTable table_4;
@@ -187,19 +195,19 @@ public class Menu extends JFrame {
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(112)
-					.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(36)
-					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
+					.addGap(43)
+					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
+					.addGap(24))
 		);
 		gl_panel_2.setVerticalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addGap(29)
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)))
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)))
 		);
 		panel_2.setLayout(gl_panel_2);
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
@@ -557,16 +565,16 @@ public class Menu extends JFrame {
 		button_8.setBounds(497, 97, 42, 22);
 		inMatch.add(button_8);
 		
-		JPanel fixture = new JPanel();
-		fixture.setBorder(new LineBorder(new Color(0, 0, 0)));
-		fixture.setLayout(null);
-		fixture.setBackground(Color.LIGHT_GRAY);
-		contentPane.add(fixture, "name_54964175415993");
+		JPanel teamOrClub = new JPanel();
+		teamOrClub.setBorder(new LineBorder(new Color(0, 0, 0)));
+		teamOrClub.setLayout(null);
+		teamOrClub.setBackground(Color.LIGHT_GRAY);
+		contentPane.add(teamOrClub, "name_54964175415993");
 		
 		JLabel lblFixture = new JLabel("Team / Club");
 		lblFixture.setFont(new Font("Nunito SemiBold", Font.PLAIN, 50));
 		lblFixture.setBounds(351, -21, 322, 127);
-		fixture.add(lblFixture);
+		teamOrClub.add(lblFixture);
 		//		model.addColumn("team_name");
 		//		model.addColumn("username");
 		//		model.addColumn("password");
@@ -579,7 +587,7 @@ public class Menu extends JFrame {
 				
 				JScrollPane scrollPane = new JScrollPane();
 				scrollPane.setBounds(77, 81, 807, 481);
-				fixture.add(scrollPane);
+				teamOrClub.add(scrollPane);
 				
 				
 				
@@ -594,7 +602,7 @@ public class Menu extends JFrame {
 				panel_7.setLayout(null);
 				panel_7.setBackground(new Color(0, 51, 102));
 				panel_7.setBounds(0, 0, 76, 578);
-				fixture.add(panel_7);
+				teamOrClub.add(panel_7);
 				
 				JPanel panel_8 = new JPanel();
 				panel_8.setLayout(null);
@@ -643,15 +651,35 @@ public class Menu extends JFrame {
 		label_8.setBounds(12, 0, 50, 50);
 		panel_12.add(label_8);
 		
-		JPanel panel_13 = new JPanel();
-		contentPane.add(panel_13, "name_22447715096617");
-		panel_13.setLayout(null);
+		JPanel fixture = new JPanel();
+//		JScrollPane scrollPane2 = new JScrollPane();
+//		scrollPane2.setBounds(23, 149, 1003, 405);
 		
+		contentPane.add(fixture, "name_22447715096617");
+		fixture.setLayout(null);
+		//component
+		tableMatch2 = new JTable();
+		JScrollPane scrollPane2 = new JScrollPane(tableMatch2);
+		scrollPane2.setBounds(75, 80, 815, 498);
+//		contentPane.add(scrollPane2);
+		fixture.add( scrollPane2);
+		JTableHeader theader = tableMatch2.getTableHeader();
+		theader.setBackground(Color.pink);
+		theader.setForeground(Color.white);
+		theader.setFont(new Font("Tahoma", Font.BOLD , 25));
+		tableMatch2.setFont(new Font("Arial",Font.BOLD,20));
+		tableMatch2.setRowHeight(30);
+		tableMatch2.setForeground(Color.yellow);
+		tableMatch2.setBackground(Color.darkGray);
+		tableMatch2.setAlignmentX(CENTER_ALIGNMENT);
+		tableMatch2.setAlignmentY(CENTER_ALIGNMENT);
+//		scrollPane.setViewportView(tableMatch2);
+	//	 	End	contentPane.add(scrollPane);
 		JPanel panel_14 = new JPanel();
 		panel_14.setLayout(null);
 		panel_14.setBackground(new Color(0, 51, 102));
 		panel_14.setBounds(0, 0, 76, 578);
-		panel_13.add(panel_14);
+		fixture.add(panel_14);
 		
 		JPanel panel_15 = new JPanel();
 		panel_15.setLayout(null);
@@ -660,21 +688,51 @@ public class Menu extends JFrame {
 		panel_14.add(panel_15);
 		
 		JLabel label_9 = new JLabel("");
+		
 		label_9.setIcon(new ImageIcon(Menu.class.getResource("/img/icons8-menu-filled-50.png")));
 		label_9.setBounds(12, 0, 50, 50);
 		panel_15.add(label_9);
 		
-		table_4 = new JTable();
-		table_4.setBounds(157, 154, 1, 1);
-		panel_13.add(table_4);
+		//show match table  
 		
-		JButton btnNewButton = new JButton("Add new schedule");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+//		fixture.add(new AddMatch().tableMatch);
+		
+		JButton addMatch = new JButton("Add match");
+		addMatch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MatchInfo match = new MatchInfo(1, tableMatch2);
+				match.setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(77, 6, 178, 58);
-		panel_13.add(btnNewButton);
+		addMatch.setBounds(393, 10, 178, 58);
+		fixture.add(addMatch);
+		
+		JButton btnDisplay = new JButton("Display");
+		btnDisplay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+					PreparedStatement st;
+					ResultSet rs;
+					String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
+					try {
+						st = DBconnection.getConnection().prepareStatement(query);
+//						st.setInt(1, 1);
+						rs = st.executeQuery();
+						tableMatch2.setModel(DbUtils.resultSetToTableModel(rs));
+						 
+					
+
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					
+					
+				}
+
+			}
+		});
+		btnDisplay.setBounds(154, 15, 117, 29);
+		fixture.add(btnDisplay);
 		label_6.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -689,7 +747,7 @@ public class Menu extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				contentPane.removeAll();
-				contentPane.add(inMatch);
+				contentPane.add(fixture);
 				contentPane.repaint();
 				contentPane.revalidate();
 			}
@@ -699,7 +757,7 @@ public class Menu extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				contentPane.removeAll();
-				contentPane.add(fixture);
+				contentPane.add(teamOrClub);
 				contentPane.repaint();
 				contentPane.revalidate();
 			}
@@ -733,5 +791,34 @@ public class Menu extends JFrame {
 				contentPane.revalidate();
 			}
 		});
+		label_9.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				contentPane.removeAll();
+				contentPane.add(home);
+				contentPane.repaint();
+				contentPane.revalidate();
+			}
+		});
+	}
+	//testing get account id and get username
+	public int getTID() {
+		String username = "sarakorn";
+		PreparedStatement st;
+		ResultSet rs;
+		int tid=0;
+		String query = "SELECT `tid` FROM `teamleader` WHERE `username`=?";
+		try {
+			st = DBconnection.getConnection().prepareStatement(query);
+			st.setString(1, username);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				tid = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tid;
 	}
 }

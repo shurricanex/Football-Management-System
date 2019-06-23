@@ -1,7 +1,6 @@
-package Hok;
+package Fixture;
 
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -14,6 +13,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import Home.DBconnection;
+import myMenu.Menu;
 import net.proteanit.sql.DbUtils;
 
 import java.awt.FlowLayout;
@@ -28,12 +29,10 @@ import javax.swing.JScrollPane;
 import java.sql.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-public class Addmember extends JFrame {
+public class AddMatch extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
-	
+	public JTable tableMatch;
 	/**
 	 * Launch the application.
 	 */
@@ -41,7 +40,8 @@ public class Addmember extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Addmember frame = new Addmember();
+					//instantiate Addmatch obj
+					AddMatch frame = new AddMatch();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,17 +49,23 @@ public class Addmember extends JFrame {
 			}
 		});
 	}
-
+	
+	
+	
+//get MID from selected row in table 
 	public int getMID() {
 		int mid=0;
-		int selectRow = table.getSelectedRow();
-		TableModel model = table.getModel();
+		int selectRow = tableMatch.getSelectedRow();
+		TableModel model = tableMatch.getModel();
+	   // get name from the o index in the row  
 		String name = model.getValueAt(selectRow, 0).toString();
+		//? where will we put the value of name into
 		String query= "SELECT `mid` FROM `member` WHERE `name` = ?";
 		PreparedStatement st;
 		ResultSet rs;
 		try {
 			st = DBconnection.getConnection().prepareStatement(query);
+			//here we put it
 			st.setString(1, name);
 			rs=st.executeQuery();
 			if(rs.next()) {
@@ -76,10 +82,13 @@ public class Addmember extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Addmember() {
+	public AddMatch() {
 
 	}
-	public Addmember(int tid) {
+	
+	
+	public AddMatch(int tid) {
+		//new JFrame window
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(1080,720);
@@ -89,10 +98,11 @@ public class Addmember extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		//Add Member
 		JButton btnNewButton = new JButton("Add Member");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MemberInfo member = new MemberInfo(tid, table);
+				MatchInfo member = new MatchInfo(tid, tableMatch);
 				member.setVisible(true);
 
 			}
@@ -100,14 +110,16 @@ public class Addmember extends JFrame {
 		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 25));
 		btnNewButton.setBounds(804, 21, 229, 115);
 		contentPane.add(btnNewButton);
+		//End Add Member
 		
+		//Edit
 		JButton btnNewButton_1 = new JButton("Edit");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int selectRow = table.getSelectedRow();
+				int selectRow = tableMatch.getSelectedRow();
 				if (selectRow >= 0) {
-					TableModel model = table.getModel();
-					Updateinfo update = new Updateinfo(selectRow , model , getMID() , table , tid);
+					TableModel model = tableMatch.getModel();
+					UpdateMatch update = new UpdateMatch(selectRow , model , getMID() , tableMatch , tid);
 					update.setVisible(true);
 				}
 				else {
@@ -120,7 +132,9 @@ public class Addmember extends JFrame {
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnNewButton_1.setBounds(79, 581, 185, 63);
 		contentPane.add(btnNewButton_1);
+		//End Edit
 		
+		//Display
 		JButton btnNewButton_2 = new JButton("Display");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -131,7 +145,9 @@ public class Addmember extends JFrame {
 					st = DBconnection.getConnection().prepareStatement(query);
 					st.setInt(1, tid);
 					rs = st.executeQuery();
-					table.setModel(DbUtils.resultSetToTableModel(rs));
+					tableMatch.setModel(DbUtils.resultSetToTableModel(rs));
+					 
+				
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -143,24 +159,27 @@ public class Addmember extends JFrame {
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnNewButton_2.setBounds(38, 24, 229, 115);
 		contentPane.add(btnNewButton_2);
+		//end Display 
+		
+		//Delete
 		JButton btnNewButton_3 = new JButton("Delete");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent arg0) {
-				int selectRow = table.getSelectedRow();
+				int selectRow = tableMatch.getSelectedRow();
 				String query="DELETE FROM `member` WHERE `mid` = ?";
 				PreparedStatement st;
 				if(selectRow >= 0) {
 				int message = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this player?","Delete",JOptionPane.YES_NO_OPTION);
 				if(message == JOptionPane.YES_NO_OPTION) {
 					try {
-						TableModel model = table.getModel();
+						TableModel model = tableMatch.getModel();
 						String name = model.getValueAt(selectRow, 0).toString();
 						st = DBconnection.getConnection().prepareStatement(query);
 						st.setInt(1, getMID());
 						if(st.executeUpdate() != 0) {
 							JOptionPane.showMessageDialog(null,"Player named : "+name+" is deleted");
-							MemberInfo member1 = new MemberInfo(tid,table);
-							member1.displayJtableInfo(tid, table);
+							MatchInfo member1 = new MatchInfo(tid,tableMatch);
+							member1.displayJtableInfo(tid, tableMatch);
 						}
 						else {
 							JOptionPane.showMessageDialog(null,"Error deleting player");
@@ -185,25 +204,27 @@ public class Addmember extends JFrame {
 		btnNewButton_3.setBounds(756, 581, 185, 63);
 		contentPane.add(btnNewButton_3);
 		
-
-		table = new JTable();
-		JScrollPane scrollPane = new JScrollPane(table);
+// End Delete
+		
+		//Component Table , ScrollPane
+		tableMatch = new JTable();
+		JScrollPane scrollPane = new JScrollPane(tableMatch);
 		scrollPane.setBounds(23, 149, 1003, 405);
 		contentPane.add(scrollPane);
-		JTableHeader theader = table.getTableHeader();
+		JTableHeader theader = tableMatch.getTableHeader();
 		theader.setBackground(Color.pink);
 		theader.setForeground(Color.white);
 		theader.setFont(new Font("Tahoma", Font.BOLD , 25));
-		table.setFont(new Font("Arial",Font.BOLD,20));
-		table.setRowHeight(30);
-		table.setForeground(Color.yellow);
-		table.setBackground(Color.darkGray);
-		table.setAlignmentX(CENTER_ALIGNMENT);
-		table.setAlignmentY(CENTER_ALIGNMENT);
-		scrollPane.setViewportView(table);
+		tableMatch.setFont(new Font("Arial",Font.BOLD,20));
+		tableMatch.setRowHeight(30);
+		tableMatch.setForeground(Color.yellow);
+		tableMatch.setBackground(Color.darkGray);
+		tableMatch.setAlignmentX(CENTER_ALIGNMENT);
+		tableMatch.setAlignmentY(CENTER_ALIGNMENT);
+		scrollPane.setViewportView(tableMatch);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		}
-		
+		//End JFrame window
 	}
 

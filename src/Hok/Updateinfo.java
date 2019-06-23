@@ -242,6 +242,9 @@ public Updateinfo() {
 				}
 			}
 		});
+		
+		//placeholder get data from the selected row
+		
 		shirtField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
