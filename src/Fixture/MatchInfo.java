@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import Home.DBconnection;
 import net.proteanit.sql.DbUtils;
@@ -87,20 +88,21 @@ public class MatchInfo extends JFrame {
 	public void displayJtableInfo(int tid , JTable table) {
 		PreparedStatement st;
 		ResultSet rs;
-		String query= "SELECT `name` as `Name`,`height` as `Height`,`age` as `Age`,`ShirtNumber` as `ShirtNumber` FROM `member` WHERE `tid` = ?";
+		String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
 		try {
 			st = DBconnection.getConnection().prepareStatement(query);
-			st.setInt(1, tid);
+//			st.setInt(1, tid);
 			rs = st.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		
 	}
-
+	
+	
 	public MatchInfo() {
 
 	}

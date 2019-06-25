@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 import javax.swing.UIManager;
@@ -15,10 +16,14 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 import Fixture.AddMatch;
 import Fixture.MatchInfo;
+import Fixture.UpdateMatch;
 import Hok.Addmember;
+import Hok.MemberInfo;
+import Hok.Updateinfo;
 import Home.DBconnection;
 import Home.SignUp;
 import Record.Record;
@@ -28,9 +33,12 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.CompoundBorder;
 import java.awt.Font;
+import java.awt.Point;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JTextField;
@@ -57,8 +65,6 @@ import javax.swing.table.DefaultTableModel;
 public class Menu extends JFrame {
    
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
 	private Timer t;
 	private int count=0 ;
 	public int countMe;
@@ -71,6 +77,27 @@ public class Menu extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	public int getMID() {
+		int mid=0;
+		int selectRow = tableMatch2.getSelectedRow();
+		TableModel model = tableMatch2.getModel();
+		String name = model.getValueAt(selectRow, 0).toString();
+		String query= "SELECT `mid` FROM `matches` WHERE `date` = ?";
+		PreparedStatement st;
+		ResultSet rs;
+		try {
+			st = DBconnection.getConnection().prepareStatement(query);
+			st.setString(1, name);
+			rs=st.executeQuery();
+			if(rs.next()) {
+				mid = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mid;
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -86,6 +113,7 @@ public class Menu extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
 	 */
 	public Menu() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -206,8 +234,8 @@ public class Menu extends JFrame {
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addGap(29)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(lblS, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)))
 		);
 		panel_2.setLayout(gl_panel_2);
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
@@ -358,16 +386,6 @@ public class Menu extends JFrame {
 		button_7.setBounds(497, 97, 42, 22);
 		inMatch.add(button_7);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(528, 148, 268, 34);
-		inMatch.add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(183, 148, 268, 34);
-		inMatch.add(textField_1);
-		
 		JEditorPane editorPane_2 = new JEditorPane();
 		editorPane_2.setForeground(Color.WHITE);
 		editorPane_2.setBackground(Color.BLACK);
@@ -500,24 +518,22 @@ public class Menu extends JFrame {
 		label_4.setBounds(145, 186, 699, 338);
 		inMatch.add(label_4);
 		
-		JLabel label_5 = new JLabel("New label");
-		label_5.setIcon(new ImageIcon(Menu.class.getResource("/img/background_striped_lawn.jpg")));
-		label_5.setBounds(75, -11, 815, 589);
-		inMatch.add(label_5);
 		
 		
 		
 		
-		 
-		        DefaultTableModel model = new DefaultTableModel(new String[] {"team_name","username","password","phonenumber"},0)
+		
+		
+		 //Model of All club and team 
+		        DefaultTableModel model = new DefaultTableModel(new String[] {"team_name","username","phonenumber"},0)
 		        		{
 		        	
 		        	public boolean isCellEditable(int row, int column) {
-                           return true;
+                           return false;
 		        	}
 		        	
 		        		};
-		        		
+		      //End Model   		
 		        		
 		 try {
 			 PreparedStatement st;
@@ -529,10 +545,10 @@ public class Menu extends JFrame {
 	            while(Rs.next()){
 	            	String d = Rs.getString("team_name");
 	                String e = Rs.getString("username");
-	                String f = Rs.getString("password");
+//	                String f = Rs.getString("password");
 	                int g = Rs.getInt("phonenumber");
 //	            	model.addRow(new Object[]{Rs.getString(1), Rs.getString(2),Rs.getString(3),Rs.getInt(4)});
-	                model.addRow(new Object[]{d, e, f, g});
+	                model.addRow(new Object[]{d, e, g});
 	            }
 	        } catch (Exception e) {
 	            System.out.println(e.getMessage());
@@ -554,17 +570,29 @@ public class Menu extends JFrame {
 		panel_9.add(panel_10);
 		
 		JLabel label_6 = new JLabel("");
+		label_6.setBounds(12, 0, 50, 50);
+		panel_10.add(label_6);
 		
 
 		
 		label_6.setIcon(new ImageIcon(Menu.class.getResource("/img/icons8-menu-filled-50.png")));
-		label_6.setBounds(12, 0, 50, 50);
-		panel_10.add(label_6);
 		
+			
 		JButton button_8 = new JButton("New button");
 		button_8.setBounds(497, 97, 42, 22);
 		inMatch.add(button_8);
 		
+		JLabel lblNewLabel_3 = new JLabel("New label",SwingConstants.CENTER);
+		lblNewLabel_3.setBounds(205, 135, 237, 38);
+		inMatch.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("New label", SwingConstants.CENTER);
+		lblNewLabel_4.setBounds(532, 134, 231, 40);
+		inMatch.add(lblNewLabel_4);
+		JLabel label_5 = new JLabel("New label");
+		label_5.setIcon(new ImageIcon(Menu.class.getResource("/img/background_striped_lawn.jpg")));
+		label_5.setBounds(75, -11, 815, 589);
+		inMatch.add(label_5);
 		JPanel teamOrClub = new JPanel();
 		teamOrClub.setBorder(new LineBorder(new Color(0, 0, 0)));
 		teamOrClub.setLayout(null);
@@ -704,45 +732,125 @@ public class Menu extends JFrame {
 				match.setVisible(true);
 			}
 		});
-		addMatch.setBounds(393, 10, 178, 58);
+		addMatch.setBounds(394, 10, 178, 58);
 		fixture.add(addMatch);
 		
 		JButton btnDisplay = new JButton("Display");
 		btnDisplay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-					PreparedStatement st;
-					ResultSet rs;
-					String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
-					try {
-						st = DBconnection.getConnection().prepareStatement(query);
+//					PreparedStatement st;
+//					ResultSet rs;
+//					String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
+//					try {
+//						st = DBconnection.getConnection().prepareStatement(query);
 //						st.setInt(1, 1);
-						rs = st.executeQuery();
-						tableMatch2.setModel(DbUtils.resultSetToTableModel(rs));
-						 
+//						rs = st.executeQuery();
+//						tableMatch2.setModel(DbUtils.resultSetToTableModel(rs));
+//						 
+//					
+//                
+//					} catch (SQLException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+			
+//				}
+				//Replace above code with just this object
+//				MatchInfo member2= new MatchInfo(1 , tableMatch2);
+//				member2.displayJtableInfo(1, tableMatch2);
+				//Display InMatch observation
+				
+					int selectRow = tableMatch2.getSelectedRow();
+					if (selectRow >= 0) {
+						
+//         				UpdateMatch update = new UpdateMatch(selectRow , model , getMID() , tableMatch2 , 1);
+//						update.setVisible(true);
+						TableModel matchModel = tableMatch2.getModel();
+						lblNewLabel_3.setText(matchModel.getValueAt(selectRow,1).toString());
+						lblNewLabel_4.setText(matchModel.getValueAt(selectRow,3).toString());
+						contentPane.removeAll();
+						contentPane.add(inMatch);
+						contentPane.repaint();
+						contentPane.revalidate();
+						
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"<html><font face='Arial' size='8' color='blue'>No match is selected");
+					}
 					
 
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					
-					
 				}
-
-			}
+					
+			
 		});
+		
+		
 		btnDisplay.setBounds(154, 15, 117, 29);
 		fixture.add(btnDisplay);
-		label_6.addMouseListener(new MouseAdapter() {
+		
+		JButton btnUpdate = new JButton("update");
+		btnUpdate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				contentPane.removeAll();
-				contentPane.add(home);
-				contentPane.repaint();
-				contentPane.revalidate();
+				int selectRow = tableMatch2.getSelectedRow();
+				if (selectRow >= 0) {
+					TableModel model = tableMatch2.getModel();
+					UpdateMatch update = new UpdateMatch(selectRow , model , getMID() , tableMatch2 , 1);
+					update.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"<html><font face='Arial' size='8' color='blue'>No match is selected");
+				}
+				
+
+			}
+			
+		});
+		btnUpdate.setBounds(659, 10, 178, 58);
+		fixture.add(btnUpdate);
+	
+		//Delete match
+		JButton btnDelete = new JButton("delete");
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectRow = tableMatch2.getSelectedRow();
+				String query="DELETE FROM `matches` WHERE `mid` = ?";
+				PreparedStatement st;
+				if(selectRow >= 0) {
+				int message = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this player?","Delete",JOptionPane.YES_NO_OPTION);
+				if(message == JOptionPane.YES_NO_OPTION) {
+					try {
+						TableModel model = tableMatch2.getModel();
+						String name = model.getValueAt(selectRow, 0).toString();
+						st = DBconnection.getConnection().prepareStatement(query);
+						st.setInt(1, getMID());
+						if(st.executeUpdate() != 0) {
+							JOptionPane.showMessageDialog(null,"Player named : "+name+" is deleted");
+//							MatchInfo match1 = new MatchInfo(tid,table);
+//							match1.displayJtableInfo(tid, table);
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"Error deleting player");
+						}
+
+					} catch (SQLException ee) {
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+				}
+
+				
+				
+			}
+				else {
+						JOptionPane.showMessageDialog(null,"No player is selected");
+					}
 			}
 		});
-		//
+		btnDelete.setBounds(154, 39, 117, 29);
+		fixture.add(btnDelete);
+		// Switch from home to match list
 		panel_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -750,8 +858,15 @@ public class Menu extends JFrame {
 				contentPane.add(fixture);
 				contentPane.repaint();
 				contentPane.revalidate();
+				//Display matches when click on Match VS logo
+				MatchInfo member1= new MatchInfo(1, tableMatch2);
+				member1.displayJtableInfo(1, tableMatch2);
+				//end display
 			}
+			
 		});
+		//End Home to Match list 
+		
 		//Team logo icon action
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -800,7 +915,20 @@ public class Menu extends JFrame {
 				contentPane.revalidate();
 			}
 		});
+		label_6.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				contentPane.removeAll();
+				contentPane.add(fixture);
+				contentPane.repaint();
+				contentPane.revalidate();
+			}
+		});
+
+		
+
 	}
+	
 	//testing get account id and get username
 	public int getTID() {
 		String username = "sarakorn";

@@ -123,7 +123,7 @@ public class AddMatch extends JFrame {
 					update.setVisible(true);
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"<html><font face='Arial' size='8' color='blue'>No player is selected");
+					JOptionPane.showMessageDialog(null,"<html><font face='Arial' size='8' color='blue'>No match is selected");
 				}
 				
 

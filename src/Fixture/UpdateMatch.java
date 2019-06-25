@@ -110,22 +110,22 @@ public UpdateMatch() {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Name :");
+		JLabel lblNewLabel = new JLabel("Date :");
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		lblNewLabel.setBounds(67, 58, 121, 48);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Age :");
+		JLabel lblNewLabel_1 = new JLabel("Home :");
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 20));
 		lblNewLabel_1.setBounds(83, 159, 121, 58);
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("Height (cm) :");
+		JLabel lblNewLabel_2 = new JLabel("Time :");
 		lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 20));
 		lblNewLabel_2.setBounds(12, 272, 140, 48);
 		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_3 = new JLabel("Shirt Number :");
+		JLabel lblNewLabel_3 = new JLabel("Away :");
 		lblNewLabel_3.setFont(new Font("Arial", Font.BOLD, 20));
 		lblNewLabel_3.setBounds(0, 382, 176, 58);
 		contentPane.add(lblNewLabel_3);
@@ -138,20 +138,21 @@ public UpdateMatch() {
 				String age1 = ageField.getText();
 				String height1 = heightField.getText();
 				String shirtnumber1  = shirtField.getText();
-				if(verifyField()) {
-					int  age= Integer.parseInt(age1);
-					int height = Integer.parseInt(height1);
-					int shirtnumber = Integer.parseInt(shirtnumber1);
-					try {
-						if(!checkShirtnumber(shirtnumber , table)) {
+				//Verify input in Field
+//				if(verifyField()) {
+//					int  age= Integer.parseInt(age1);
+//					int height = Integer.parseInt(height1);
+//					int shirtnumber = Integer.parseInt(shirtnumber1);
+//					try {
+//						if(!checkShirtnumber(shirtnumber , table)) {
 							PreparedStatement st;
-							String query = "UPDATE `member` SET `name`=?,`height`=?,`age`=?,`ShirtNumber`=? WHERE `mid` = ?";
+							String query = "UPDATE `matches` SET `date`=?,`home`=?,`start_time`=?,`away`=? WHERE `mid` = ?";
 							try {
 								st = DBconnection.getConnection().prepareStatement(query);
 								st.setString(1, name);
-								st.setInt(2, height);
-								st.setInt(3, age);
-								st.setInt(4, shirtnumber);
+								st.setString(2, age1);
+								st.setString(3, height1);
+								st.setString(4, shirtnumber1);
 								st.setInt(5, mid);
 								if(st.executeUpdate() != 0) {
 									JOptionPane.showMessageDialog(null, "Update successfully");
@@ -164,16 +165,18 @@ public UpdateMatch() {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-						}
-					} catch (HeadlessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
+//						}
+//					} 
+//					catch (HeadlessException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} 
+//					catch (SQLException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				
 				
 				
 			}
@@ -195,14 +198,16 @@ public UpdateMatch() {
 		nameField.setColumns(10);
 		
 		ageField = new JTextField();
-		ageField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				if(!Character.isDigit(arg0.getKeyChar())) {
-					arg0.consume();
-				}
-			}
-		});
+		//Can input only number digit 
+//		ageField.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyTyped(KeyEvent arg0) {
+//				if(!Character.isDigit(arg0.getKeyChar())) {
+//					arg0.consume();
+//				}
+//			}
+//		});
+		//End digit input restriction
 		ageField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -235,14 +240,15 @@ public UpdateMatch() {
 		heightField.setColumns(10);
 		
 		shirtField = new JTextField();
-		shirtField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				if(!Character.isDigit(e.getKeyChar()) || shirtField.getText().length()>1) {
-					e.consume();
-				}
-			}
-		});
+		//Shirt field can input only number digit 
+//		shirtField.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyTyped(KeyEvent e) {
+//				if(!Character.isDigit(e.getKeyChar()) || shirtField.getText().length()>1) {
+//					e.consume();
+//				}
+//			}
+//		});
 		shirtField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
