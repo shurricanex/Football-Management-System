@@ -73,6 +73,12 @@ public class Menu extends JFrame {
 	private JTable table_1;
 	private JTable table_3;
 	private JTable table_4;
+	private Goal myGoal;
+	private int goal=0;
+	private int goal1=0;
+	private JLabel label_1;
+	private JLabel label_2;
+	
 
 	/**
 	 * Launch the application.
@@ -313,37 +319,72 @@ public class Menu extends JFrame {
 //		});
 		
 		JButton button_2 = new JButton("-");
+		button_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				goal1--;
+				label_1.setText(String.valueOf(goal1));
+			}
+		});
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		button_2.setToolTipText("^");
 		button_2.setBounds(606, 116, 25, 24);
 		inMatch.add(button_2);
 		
 		JButton button_3 = new JButton("+");
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+		
+				goal++;
+		label_2.setText(String.valueOf(goal));
+
+		
+			}
+		});
+		
 		button_3.setBounds(342, 116, 25, 24);
 		inMatch.add(button_3);
 		
 		JButton button_4 = new JButton("+");
-		button_4.setBounds(568, 116, 25, 24);
+		button_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				goal1++;
+				label_1.setText(String.valueOf(goal1));
+			}
+		});
+		
+		button_4.setBounds(569, 116, 25, 24);
 		inMatch.add(button_4);
 		
 		JButton button_5 = new JButton("-");
+		button_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				goal--;
+				label_2.setText(String.valueOf(goal));
+			}
+		});
 		button_5.setBounds(379, 116, 25, 24);
 		inMatch.add(button_5);
 		
-		JLabel label_1 = new JLabel("New label");
-		label_1.setBounds(714, 21, 113, 99);
+		 label_1 = new JLabel("New label");
+		label_1.setBounds(565, 28, 78, 75);
 		inMatch.add(label_1);
+		label_1.setText(String.valueOf(goal1));
 		
-		JLabel label_2 = new JLabel("New label");
-		label_2.setBounds(148, 21, 113, 99);
+		label_2 = new JLabel("New label");
+		label_2.setBounds(326, 28, 78, 76);
 		inMatch.add(label_2);
+		label_2.setText(String.valueOf(goal));
 		
-		JEditorPane editorPane = new JEditorPane();
-		editorPane.setBounds(568, 37, 64, 67);
-		inMatch.add(editorPane);
+//		myGoal = new Goal();
+//		  goal = myGoal.getGoal();
+//		 System.out.println(ggoal);
 		
-		JEditorPane editorPane_1 = new JEditorPane();
-		editorPane_1.setBounds(342, 37, 64, 67);
-		inMatch.add(editorPane_1);
 		
 		JLabel label_3 = new JLabel("\n");
 		label_3.setForeground(Color.WHITE);
@@ -949,4 +990,5 @@ public class Menu extends JFrame {
 		}
 		return tid;
 	}
+	
 }
