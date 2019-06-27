@@ -58,6 +58,7 @@ public class Updateinfo extends JFrame {
 		TableModel model = table.getModel();
 		// get mid of selected row
 		String shirtnumber1 = model.getValueAt(selectRow, 3).toString();
+		String name = model.getValueAt(selectRow, 3).toString();
 		int shirtnumber2 = Integer.parseInt(shirtnumber1);
 		PreparedStatement st;
 		ResultSet rs;
@@ -66,7 +67,7 @@ public class Updateinfo extends JFrame {
 		st.setInt(1, shirtnumber);
 		rs = st.executeQuery();
 		if(rs.next()) {
-			if(rs.getInt(4)==shirtnumber2) {
+			if(rs.getInt(4)==shirtnumber2 && rs.getString(3)==name ) {
 				return false;
 			}
 			else {
@@ -100,7 +101,7 @@ public Updateinfo() {
 	 * Create the frame.
 	 */
 	public Updateinfo(int selectRow , TableModel model ,int mid , JTable table , int tid) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(500,620);
 		setResizable(false);

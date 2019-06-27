@@ -80,7 +80,7 @@ public class Addmember extends JFrame {
 
 	}
 	public Addmember(int tid) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(1080,720);
 		setResizable(false);

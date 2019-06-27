@@ -160,17 +160,6 @@ public class Menu extends JFrame {
 		panel.setBounds(-6, 0, 76, 578);
 		home.add(panel);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setLayout(null);
-		panel_5.setBackground(new Color(0, 51, 102));
-		panel_5.setBounds(0, 18, 75, 50);
-		panel.add(panel_5);
-		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Menu.class.getResource("/img/icons8-menu-filled-50.png")));
-		label.setBounds(12, 0, 50, 50);
-		panel_5.add(label);
-		
 		 panel_13 = new JPanel();
 		panel_13.addMouseListener(new MouseAdapter() {
 			@Override
@@ -178,6 +167,11 @@ public class Menu extends JFrame {
 				Addmember member= new Addmember(i);
     			member.setVisible(true);
     			
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panel_13.setBackground(Color.LIGHT_GRAY);
+				panel_13.revalidate();
 			}
 		});
 		panel_13.setBounds(6, 113, 69, 50);
@@ -187,6 +181,28 @@ public class Menu extends JFrame {
 		JLabel lblSquad = new JLabel("Squad");
 		lblSquad.setBounds(13, 16, 38, 16);
 		panel_13.add(lblSquad);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panel_5.setBackground(Color.LIGHT_GRAY);
+				panel_5.revalidate();
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Login login = new Login();
+				login.frame.setVisible(true);
+				dispose();
+			}
+		});
+		panel_5.setLayout(null);
+		panel_5.setBounds(6, 25, 69, 50);
+		panel.add(panel_5);
+		
+		JLabel lblLogOut = new JLabel("Log Out");
+		lblLogOut.setBounds(6, 16, 57, 16);
+		panel_5.add(lblLogOut);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(63, 298, 827, 270);

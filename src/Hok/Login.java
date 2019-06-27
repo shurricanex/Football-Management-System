@@ -28,7 +28,7 @@ import javax.swing.JPasswordField;
 import java.sql.*;
 public class Login {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 
