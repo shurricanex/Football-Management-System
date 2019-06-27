@@ -22,18 +22,21 @@ import Fixture.AddMatch;
 import Fixture.MatchInfo;
 import Fixture.UpdateMatch;
 import Hok.Addmember;
+import Hok.Login;
 import Hok.MemberInfo;
 import Hok.Updateinfo;
 import Home.DBconnection;
 import Home.SignUp;
 import Record.Record;
 import Record.RecordGoal;
+import Record.RecordMatchScore;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.CompoundBorder;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
 import java.awt.Point;
 
 import javax.swing.GroupLayout;
@@ -80,6 +83,11 @@ public class Menu extends JFrame {
 	private JLabel label_1;
 	private JLabel label_2;
 	public JLabel lblNewLabel_3;
+	public JPanel panel_13;
+	public JButton btnUpdate;
+	public JButton btnDisplay;
+	public JButton btnDelete;
+	public JButton addMatch;
 	
 
 	/**
@@ -121,9 +129,11 @@ public class Menu extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param  
 	 * 
 	 */
-	public Menu() {
+	public Menu() {};
+	public Menu(int i) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		contentPane = new JPanel();
@@ -133,7 +143,6 @@ public class Menu extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 		
 		JPanel home = new JPanel();
-		home.setBorder(null);
 		home.setBackground(new Color(204, 204, 204));
 		contentPane.add(home, "name_54964195979851");
 		
@@ -161,6 +170,23 @@ public class Menu extends JFrame {
 		label.setIcon(new ImageIcon(Menu.class.getResource("/img/icons8-menu-filled-50.png")));
 		label.setBounds(12, 0, 50, 50);
 		panel_5.add(label);
+		
+		 panel_13 = new JPanel();
+		panel_13.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Addmember member= new Addmember(i);
+    			member.setVisible(true);
+    			
+			}
+		});
+		panel_13.setBounds(6, 113, 69, 50);
+		panel.add(panel_13);
+		panel_13.setLayout(null);
+		
+		JLabel lblSquad = new JLabel("Squad");
+		lblSquad.setBounds(13, 16, 38, 16);
+		panel_13.add(lblSquad);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(63, 298, 827, 270);
@@ -644,6 +670,25 @@ public class Menu extends JFrame {
 		JLabel lblNewLabel_4 = new JLabel("New label", SwingConstants.CENTER);
 		lblNewLabel_4.setBounds(532, 134, 231, 40);
 		inMatch.add(lblNewLabel_4);
+		
+		JButton btnNewButton = new JButton("Submit match");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String score1 = label_1.getText();
+				String score2 =label_2.getText();
+				
+				RecordMatchScore rec = new RecordMatchScore(getMID(),label_1,label_2);
+				
+			}
+		});
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnNewButton.setBounds(426, 145, 117, 29);
+		inMatch.add(btnNewButton);
 		JLabel label_5 = new JLabel("New label");
 		label_5.setIcon(new ImageIcon(Menu.class.getResource("/img/background_striped_lawn.jpg")));
 		label_5.setBounds(75, -11, 815, 589);
@@ -798,7 +843,7 @@ public class Menu extends JFrame {
 		
 //		fixture.add(new AddMatch().tableMatch);
 		
-		JButton addMatch = new JButton("Add match");
+		addMatch = new JButton("Add match");
 		addMatch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				MatchInfo match = new MatchInfo( tableMatch2);
@@ -808,7 +853,7 @@ public class Menu extends JFrame {
 		addMatch.setBounds(394, 10, 178, 58);
 		fixture.add(addMatch);
 		
-		JButton btnDisplay = new JButton("Display");
+		 btnDisplay = new JButton("Display");
 		btnDisplay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
@@ -861,7 +906,7 @@ public class Menu extends JFrame {
 		btnDisplay.setBounds(154, 15, 117, 29);
 		fixture.add(btnDisplay);
 		
-		JButton btnUpdate = new JButton("update");
+		 btnUpdate = new JButton("update");
 		btnUpdate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -883,7 +928,7 @@ public class Menu extends JFrame {
 		fixture.add(btnUpdate);
 	
 		//Delete match
-		JButton btnDelete = new JButton("delete");
+		 btnDelete = new JButton("delete");
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -1026,25 +1071,4 @@ public class Menu extends JFrame {
 		}
 		return tid;
 	}
-	//get tid from teamleader list 
-//	public int getTID(JLabel label) {
-//		String teamName = label.getText();
-//		PreparedStatement st;
-//		ResultSet rs;
-//		int tid=0;
-//		String query = "SELECT `tid` FROM `teamleader` WHERE `team_name`=?";
-//		try {
-//			st = DBconnection.getConnection().prepareStatement(query);
-//			st.setString(1, teamName);
-//			rs = st.executeQuery();
-//			if(rs.next()) {
-//				tid = rs.getInt(1);
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return tid;
-//	}
-	
 }

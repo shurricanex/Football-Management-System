@@ -62,12 +62,13 @@ public class MemberInfo extends JFrame {
 			return true;
 		}
 	}
-	public boolean checkShirtnumber(int shirtnumber) throws SQLException{
+	public boolean checkShirtnumber(int tid,int shirtnumber) throws SQLException{
 		PreparedStatement st;
 		ResultSet rs;
-		String query= "select * from member where shirtnumber = ?";
+		String query= "select * from member where shirtnumber = ? and tid=?";
 		st = DBconnection.getConnection().prepareStatement(query);
 		st.setInt(1, shirtnumber);
+		st.setInt(2, tid);
 		rs = st.executeQuery();
 		if(rs.next()) {
 			JOptionPane.showMessageDialog(null,"This shirt number is already taken");
@@ -148,7 +149,7 @@ public class MemberInfo extends JFrame {
 						int height = Integer.parseInt(height1);
 						int shirtnumber = Integer.parseInt(shirtnumber1);
 					try {
-						if(!checkShirtnumber(shirtnumber)) {
+						if(!checkShirtnumber(tid,shirtnumber)) {
 							try {
 								st = DBconnection.getConnection().prepareStatement(insertquery);
 								st.setInt(1, tid);

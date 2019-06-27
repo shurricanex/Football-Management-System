@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+
+import myMenu.Menu;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -121,9 +124,21 @@ public class Login {
 					rs = st.executeQuery();
 					if(rs.next()) {
 						//Show new form 
-						Addmember member= new Addmember(getTID());
-						member.setVisible(true);
+//						Addmember member= new Addmember(getTID());
+//						member.setVisible(true);
 						frame.setVisible(false);
+						Menu menu = new Menu(getTID());
+						menu.setVisible(true);
+						if(getTID()!=36) {
+//							menu.panel_13.setVisible(false);
+							menu.btnDelete.setVisible(false);
+							menu.btnDisplay.setVisible(false);
+							menu.btnUpdate.setVisible(false);
+							menu.addMatch.setVisible(false);
+						}
+						else {
+							menu.panel_13.setVisible(false);
+						}
 					}
 					else {
 						JOptionPane.showMessageDialog(frame, "Incorrect username or password","Error login", 2);

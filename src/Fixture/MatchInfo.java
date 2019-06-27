@@ -88,7 +88,7 @@ public class MatchInfo extends JFrame {
 	public void displayJtableInfo( JTable table) {
 		PreparedStatement st;
 		ResultSet rs;
-		String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
+		String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away`,`score`as `Score` FROM `matches`";
 		try {
 			st = DBconnection.getConnection().prepareStatement(query);
 //			st.setInt(1, tid);
