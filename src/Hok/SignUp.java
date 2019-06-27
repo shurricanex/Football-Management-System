@@ -199,12 +199,15 @@ public class SignUp extends JFrame {
 							if(!checkUsername(username)) {
 								PreparedStatement st;
 								String insertQuery= "INSERT INTO `teamleader`(`team_name`, `username`, `password`, `phonenumber`) VALUES (?,?,?,?)";
+								
 								st= DBconnection.getConnection().prepareStatement(insertQuery);
 								
 								st.setString(1, teamname);
 								st.setString(2, username);
 								st.setString(3,	password );
 								st.setString(4, phonenumber);
+						
+							
 								if(st.executeUpdate() != 0) {
 									
 									JOptionPane.showMessageDialog(null,"Your account has been created successfully !");
@@ -228,6 +231,51 @@ public class SignUp extends JFrame {
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						}
+						PreparedStatement st1;
+						ResultSet rs;
+                        int tid=0;
+                        String name="";					
+						String queryToGet = "SELECT `tid`,`team_name` FROM `teamleader` WHERE `username`=?";
+					
+						try {
+							st1= DBconnection.getConnection().prepareStatement(queryToGet);
+						
+							// for query 
+							st1.setString(1, username);
+							//end query 
+							rs = st1.executeQuery();
+							if(rs.next()) {
+								tid = rs.getInt(1);
+							    name = rs.getString(2);	
+							}
+							
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						try {
+							String queryToInsert =  "INSERT INTO `team`(`tid`,`match_played`,`won`,`draw`,`lost`,`gf`,`gd`,`point`,`pos`,`team_name`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+//							String queryToInsert =  "INSERT INTO `team`(`tid`,`team_name`)VALUES(?,?)";
+							PreparedStatement st2 = DBconnection.getConnection().prepareStatement(queryToInsert);
+//							 System.out.println(tid+" "+name);
+							 st2.setInt(1, tid);
+								st2.setInt(2,0);
+								 st2.setInt(3, 0);
+								 st2.setInt(4, 0);
+								 st2.setInt(5, 0);
+								 st2.setInt(6, 0);
+								 st2.setInt(7, 0);
+								 st2.setInt(8, 0);
+								 st2.setInt(9, 0);
+								 st2.setString(10, name);
+								 st2.executeUpdate();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							
+
+							
 						}
 					}
 					

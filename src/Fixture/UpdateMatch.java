@@ -157,8 +157,8 @@ public UpdateMatch() {
 								if(st.executeUpdate() != 0) {
 									JOptionPane.showMessageDialog(null, "Update successfully");
 									dispose();
-									MatchInfo member1= new MatchInfo(tid , table);
-									member1.displayJtableInfo(tid, table);
+									MatchInfo member1= new MatchInfo(table);
+									member1.displayJtableInfo( table);
 								}
 								
 							} catch (SQLException e) {

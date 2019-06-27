@@ -27,6 +27,7 @@ import Hok.Updateinfo;
 import Home.DBconnection;
 import Home.SignUp;
 import Record.Record;
+import Record.RecordGoal;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.border.BevelBorder;
@@ -66,7 +67,7 @@ public class Menu extends JFrame {
    
 	private JPanel contentPane;
 	private Timer t;
-	private int count=0 ;
+	public int count=0 ;
 	public int countMe;
 	private JTable table;
 	public JTable tableMatch2;
@@ -74,10 +75,11 @@ public class Menu extends JFrame {
 	private JTable table_3;
 	private JTable table_4;
 	private Goal myGoal;
-	private int goal=0;
+	public int goal=0;
 	private int goal1=0;
 	private JLabel label_1;
 	private JLabel label_2;
+	public JLabel lblNewLabel_3;
 	
 
 	/**
@@ -341,7 +343,9 @@ public class Menu extends JFrame {
 		
 				goal++;
 		label_2.setText(String.valueOf(goal));
-
+		
+	           RecordGoal recordGoal = new  RecordGoal(getMID(),getTID(lblNewLabel_3),count,goal);
+                  recordGoal.setVisible(true);
 		
 			}
 		});
@@ -350,11 +354,18 @@ public class Menu extends JFrame {
 		inMatch.add(button_3);
 		
 		JButton button_4 = new JButton("+");
+		button_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
 		button_4.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				goal1++;
 				label_1.setText(String.valueOf(goal1));
+				 RecordGoal recordGoal = new  RecordGoal(getMID(),getTID(lblNewLabel_1),count,goal1);
+                 recordGoal.setVisible(true);
 			}
 		});
 		
@@ -371,15 +382,17 @@ public class Menu extends JFrame {
 		button_5.setBounds(379, 116, 25, 24);
 		inMatch.add(button_5);
 		
-		 label_1 = new JLabel("New label");
+		 label_1 = new JLabel("New label",SwingConstants.CENTER);
 		label_1.setBounds(565, 28, 78, 75);
 		inMatch.add(label_1);
 		label_1.setText(String.valueOf(goal1));
+		label_1.setFont(new Font("Nunito",Font.PLAIN,50));
 		
-		label_2 = new JLabel("New label");
+		label_2 = new JLabel("New label",SwingConstants.CENTER);
 		label_2.setBounds(326, 28, 78, 76);
 		inMatch.add(label_2);
 		label_2.setText(String.valueOf(goal));
+		label_2.setFont(new Font("Nunito",Font.PLAIN,50));
 		
 //		myGoal = new Goal();
 //		  goal = myGoal.getGoal();
@@ -407,6 +420,7 @@ public class Menu extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
+						
 						count++;
 						label_3.setText(count+"");
 //						myLabel.setText(count+"");
@@ -623,7 +637,7 @@ public class Menu extends JFrame {
 		button_8.setBounds(497, 97, 42, 22);
 		inMatch.add(button_8);
 		
-		JLabel lblNewLabel_3 = new JLabel("New label",SwingConstants.CENTER);
+		 lblNewLabel_3 = new JLabel("New label",SwingConstants.CENTER);
 		lblNewLabel_3.setBounds(205, 135, 237, 38);
 		inMatch.add(lblNewLabel_3);
 		
@@ -694,12 +708,30 @@ public class Menu extends JFrame {
 		lblTable.setBounds(369, 6, 134, 91);
 		table_2.add(lblTable);
 		//table in position table
-		DefaultTableModel model1 = new DefaultTableModel(new String[] {"position","club","played","Won","drawn","lost","GF","GA","GD","point"},0);
-		
+//		DefaultTableModel model1 = new DefaultTableModel(new String[] {"position","club","played","Won","drawn","lost","GF","GA","GD","point"},0);
+//		 try {
+//			 PreparedStatement st;
+//	            String query ="SELECT * FROM teamleader";
+//	            st = DBconnection.getConnection().prepareStatement(query);
+//	           
+//	            
+//	            ResultSet Rs = st.executeQuery();
+//	            while(Rs.next()){
+//	            	String d = Rs.getString("team_name");
+////	                String f = Rs.getString("password");
+////	                int g = Rs.getInt("phonenumber");
+////	            	model.addRow(new Object[]{Rs.getString(1), Rs.getString(2),Rs.getString(3),Rs.getInt(4)});
+//	                model1.addRow(new Object[]{1, d, 0});
+//			      MatchInfo info = new MatchInfo();
+//			      info.displayJtableInfo(table_3);
+//	            }
+//	        } catch (Exception e) {
+//	            System.out.println(e.getMessage());
+//	        }
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(75, 96, 815, 466);
 		table_2.add(scrollPane_1);
-		table_3 = new JTable(model1);
+		table_3 = new JTable();
 		scrollPane_1.setViewportView(table_3);
 		
 		JPanel panel_11 = new JPanel();
@@ -769,7 +801,7 @@ public class Menu extends JFrame {
 		JButton addMatch = new JButton("Add match");
 		addMatch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MatchInfo match = new MatchInfo(1, tableMatch2);
+				MatchInfo match = new MatchInfo( tableMatch2);
 				match.setVisible(true);
 			}
 		});
@@ -868,8 +900,8 @@ public class Menu extends JFrame {
 						st.setInt(1, getMID());
 						if(st.executeUpdate() != 0) {
 							JOptionPane.showMessageDialog(null,"Player named : "+name+" is deleted");
-//							MatchInfo match1 = new MatchInfo(tid,table);
-//							match1.displayJtableInfo(tid, table);
+							MatchInfo match1 = new MatchInfo(tableMatch2);
+							match1.displayJtableInfo(tableMatch2);
 						}
 						else {
 							JOptionPane.showMessageDialog(null,"Error deleting player");
@@ -891,6 +923,8 @@ public class Menu extends JFrame {
 		});
 		btnDelete.setBounds(154, 39, 117, 29);
 		fixture.add(btnDelete);
+		
+
 		// Switch from home to match list
 		panel_2.addMouseListener(new MouseAdapter() {
 			@Override
@@ -900,8 +934,8 @@ public class Menu extends JFrame {
 				contentPane.repaint();
 				contentPane.revalidate();
 				//Display matches when click on Match VS logo
-				MatchInfo member1= new MatchInfo(1, tableMatch2);
-				member1.displayJtableInfo(1, tableMatch2);
+				MatchInfo member1= new MatchInfo(tableMatch2);
+				member1.displayJtableInfo(tableMatch2);
 				//end display
 			}
 			
@@ -926,6 +960,8 @@ public class Menu extends JFrame {
 				contentPane.add(table_2);
 				contentPane.repaint();
 				contentPane.revalidate();
+				MatchInfo posTable= new MatchInfo(table_3);
+				posTable.displayPosition(table_3);
 				
 			}
 		});
@@ -970,16 +1006,16 @@ public class Menu extends JFrame {
 
 	}
 	
-	//testing get account id and get username
-	public int getTID() {
-		String username = "sarakorn";
+	//testing get account id and get username 
+	public int getTID(JLabel label) {
+		String teamName = label.getText();
 		PreparedStatement st;
 		ResultSet rs;
 		int tid=0;
-		String query = "SELECT `tid` FROM `teamleader` WHERE `username`=?";
+		String query = "SELECT `tid` FROM `teamleader` WHERE `team_name`=?";
 		try {
 			st = DBconnection.getConnection().prepareStatement(query);
-			st.setString(1, username);
+			st.setString(1, teamName);
 			rs = st.executeQuery();
 			if(rs.next()) {
 				tid = rs.getInt(1);
@@ -990,5 +1026,25 @@ public class Menu extends JFrame {
 		}
 		return tid;
 	}
+	//get tid from teamleader list 
+//	public int getTID(JLabel label) {
+//		String teamName = label.getText();
+//		PreparedStatement st;
+//		ResultSet rs;
+//		int tid=0;
+//		String query = "SELECT `tid` FROM `teamleader` WHERE `team_name`=?";
+//		try {
+//			st = DBconnection.getConnection().prepareStatement(query);
+//			st.setString(1, teamName);
+//			rs = st.executeQuery();
+//			if(rs.next()) {
+//				tid = rs.getInt(1);
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return tid;
+//	}
 	
 }

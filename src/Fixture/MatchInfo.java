@@ -85,7 +85,7 @@ public class MatchInfo extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public void displayJtableInfo(int tid , JTable table) {
+	public void displayJtableInfo( JTable table) {
 		PreparedStatement st;
 		ResultSet rs;
 		String query= "SELECT `date` as `Date`,`home` as `Home`,`start_time` as `Time`,`away` as `Away` FROM `matches`";
@@ -102,12 +102,28 @@ public class MatchInfo extends JFrame {
 		
 	}
 	
+	//position table
+	public void displayPosition( JTable table) {
+		PreparedStatement st;
+		ResultSet rs;
+		String query= "SELECT `pos` as `Position`,`team_name` as `Team`,`match_played` as `Played`,`won` as `Won`,`draw` as `Draw`,`lost` as `Lost`,`gf` as `GF`,`gd` as `GD`,`point` as `Point` from`team` ";
+		try {
+			st = DBconnection.getConnection().prepareStatement(query);
+			rs = st.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
 	
 	public MatchInfo() {
 
 	}
 	
-	public MatchInfo(int tid , JTable table) {
+	public MatchInfo(JTable table) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(500,620);
@@ -164,7 +180,7 @@ public class MatchInfo extends JFrame {
 								if(st.executeUpdate() != 0) {
 									JOptionPane.showMessageDialog(null,"Successfully Added");
 									dispose();
-//									displayJtableInfo(tid , table);
+									displayJtableInfo( table);
 
 //								}
 

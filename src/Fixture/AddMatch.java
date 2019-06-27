@@ -102,7 +102,7 @@ public class AddMatch extends JFrame {
 		JButton btnNewButton = new JButton("Add Member");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MatchInfo member = new MatchInfo(tid, tableMatch);
+				MatchInfo member = new MatchInfo(tableMatch);
 				member.setVisible(true);
 
 			}
@@ -178,8 +178,8 @@ public class AddMatch extends JFrame {
 						st.setInt(1, getMID());
 						if(st.executeUpdate() != 0) {
 							JOptionPane.showMessageDialog(null,"Player named : "+name+" is deleted");
-							MatchInfo member1 = new MatchInfo(tid,tableMatch);
-							member1.displayJtableInfo(tid, tableMatch);
+							MatchInfo member1 = new MatchInfo(tableMatch);
+							member1.displayJtableInfo( tableMatch);
 						}
 						else {
 							JOptionPane.showMessageDialog(null,"Error deleting player");
