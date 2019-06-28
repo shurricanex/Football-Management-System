@@ -1,5 +1,3 @@
-package Hok;
-
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -38,7 +36,8 @@ public class SignUp extends JFrame {
 	private JTextField unameField;
 	 private JTextField phonenumberField;
 	 private JPasswordField passwordField;
-	 String image_path = null;
+	 String image_path= null;
+	 
 	 
 	 // check the field input if they are right or wrong
 	 public boolean verifyField()
@@ -122,19 +121,19 @@ public class SignUp extends JFrame {
 			
 			JLabel lblUsername = new JLabel("Username :");
 			lblUsername.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblUsername.setBounds(198, 138, 154, 79);
+			lblUsername.setBounds(203, 116, 154, 79);
 			getContentPane().add(lblUsername);
 			
 			JLabel lblPassword = new JLabel("Phone Number :");
 			lblPassword.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblPassword.setBounds(139, 230, 229, 88);
+			lblPassword.setBounds(139, 194, 229, 88);
 			getContentPane().add(lblPassword);
 			
 			unameField = new JTextField();
 			unameField.setForeground(SystemColor.controlHighlight);
 			unameField.setText("Please enter your username");
 			unameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-			unameField.setBounds(364, 153, 421, 50);
+			unameField.setBounds(364, 131, 421, 50);
 			getContentPane().add(unameField);
 			unameField.setColumns(10);
 			unameField.addFocusListener(new FocusAdapter() {
@@ -169,7 +168,7 @@ public class SignUp extends JFrame {
 			phonenumberField.setForeground(SystemColor.controlHighlight);
 			phonenumberField.setText("Please enter your phone number");
 			phonenumberField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-			phonenumberField.setBounds(364, 250, 421, 50);
+			phonenumberField.setBounds(364, 214, 421, 50);
 			getContentPane().add(phonenumberField);
 			phonenumberField.setColumns(10);
 			phonenumberField.addFocusListener(new FocusAdapter() {
@@ -192,7 +191,7 @@ public class SignUp extends JFrame {
 			});
 			JLabel lblPath = new JLabel("Path");
 			lblPath.setFont(new Font("Tahoma", Font.PLAIN, 15));
-			lblPath.setBounds(880,600, 433, 16);
+			lblPath.setBounds(629, 547, 433, 16);
 			getContentPane().add(lblPath);
 			
 			JButton btnNewButton = new JButton("Upload Logo");
@@ -214,8 +213,10 @@ public class SignUp extends JFrame {
 				}
 			});
 			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			btnNewButton.setBounds(800, 520, 200, 50);
+			btnNewButton.setBounds(409, 529, 206, 50);
 			getContentPane().add(btnNewButton);
+			
+			
 			
 			JButton btnSignUp = new JButton("Sign Up");
 			btnSignUp.addActionListener(new ActionListener() {
@@ -230,8 +231,7 @@ public class SignUp extends JFrame {
 						try {
 							if(!checkUsername(username)) {
 								PreparedStatement st;
-								String insertQuery= "INSERT INTO `teamleader`(`team_name`, `username`, `password`, `phonenumber`, `image`) VALUES (?,?,?,?,?)";
-								
+								String insertQuery= "INSERT INTO `teamleader`(`team_name`, `username`, `password`, `phonenumber`,`imageLogo`) VALUES (?,?,?,?,?)";
 								st= DBconnection.getConnection().prepareStatement(insertQuery);
 								
 								st.setString(1, teamname);
@@ -240,7 +240,7 @@ public class SignUp extends JFrame {
 								st.setString(4, phonenumber);
 								try {
 									if(image_path == null) {
-										File file = new File("/FootballMS/src/Hok/default logo.jpg");
+										File file = new File("default logo.JPG");
 										InputStream image = new FileInputStream(file);
 										st.setBlob(5, image);
 									}
@@ -253,7 +253,8 @@ public class SignUp extends JFrame {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-							
+								
+								
 								if(st.executeUpdate() != 0) {
 									
 									JOptionPane.showMessageDialog(null,"Your account has been created successfully !");
@@ -278,51 +279,6 @@ public class SignUp extends JFrame {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						PreparedStatement st1;
-						ResultSet rs;
-                        int tid=0;
-                        String name="";					
-						String queryToGet = "SELECT `tid`,`team_name` FROM `teamleader` WHERE `username`=?";
-					
-						try {
-							st1= DBconnection.getConnection().prepareStatement(queryToGet);
-						
-							// for query 
-							st1.setString(1, username);
-							//end query 
-							rs = st1.executeQuery();
-							if(rs.next()) {
-								tid = rs.getInt(1);
-							    name = rs.getString(2);	
-							}
-							
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						try {
-							String queryToInsert =  "INSERT INTO `team`(`tid`,`match_played`,`won`,`draw`,`lost`,`gf`,`gd`,`point`,`pos`,`team_name`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-//							String queryToInsert =  "INSERT INTO `team`(`tid`,`team_name`)VALUES(?,?)";
-							PreparedStatement st2 = DBconnection.getConnection().prepareStatement(queryToInsert);
-//							 System.out.println(tid+" "+name);
-							 st2.setInt(1, tid);
-								st2.setInt(2,0);
-								 st2.setInt(3, 0);
-								 st2.setInt(4, 0);
-								 st2.setInt(5, 0);
-								 st2.setInt(6, 0);
-								 st2.setInt(7, 0);
-								 st2.setInt(8, 0);
-								 st2.setInt(9, 0);
-								 st2.setString(10, name);
-								 st2.executeUpdate();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							
-
-							
-						}
 					}
 					
 					
@@ -330,7 +286,7 @@ public class SignUp extends JFrame {
 				}
 			});
 			btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 25));
-			btnSignUp.setBounds(477, 598, 154, 62);
+			btnSignUp.setBounds(426, 610, 154, 62);
 			getContentPane().add(btnSignUp);
 			
 			JButton btnCancel = new JButton("Cancel");
@@ -345,7 +301,7 @@ public class SignUp extends JFrame {
 			
 			JLabel lblPassword_1 = new JLabel("Password :");
 			lblPassword_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblPassword_1.setBounds(203, 349, 165, 43);
+			lblPassword_1.setBounds(203, 295, 165, 43);
 			getContentPane().add(lblPassword_1);
 			
 			passwordField = new JPasswordField();
@@ -369,14 +325,14 @@ public class SignUp extends JFrame {
 				}
 			});
 			passwordField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-			passwordField.setBounds(364, 346, 421, 50);
+			passwordField.setBounds(364, 295, 421, 50);
 			passwordField.setText("***************");
 			passwordField.setForeground(SystemColor.controlHighlight);
 			getContentPane().add(passwordField);
 			
 			JLabel lblNewLabel = new JLabel("Confirm password :");
 			lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblNewLabel.setBounds(99, 427, 297, 62);
+			lblNewLabel.setBounds(94, 356, 297, 62);
 			getContentPane().add(lblNewLabel);
 			
 			confirmpasswordField = new JPasswordField();
@@ -401,14 +357,14 @@ public class SignUp extends JFrame {
 				}
 			});
 			confirmpasswordField.setFont(new Font("Tahoma", Font.PLAIN, 25));
-			confirmpasswordField.setBounds(364, 438, 421, 50);
+			confirmpasswordField.setBounds(364, 363, 421, 50);
 			confirmpasswordField.setText("***************");
 			confirmpasswordField.setForeground(SystemColor.controlHighlight);
 			getContentPane().add(confirmpasswordField);
 			
 			JLabel lblNewLabel_1 = new JLabel("Team Name :");
 			lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 25));
-			lblNewLabel_1.setBounds(180, 524, 172, 43);
+			lblNewLabel_1.setBounds(174, 446, 172, 43);
 			getContentPane().add(lblNewLabel_1);
 			
 			teamnameField = new JTextField();
@@ -431,17 +387,17 @@ public class SignUp extends JFrame {
 			teamnameField.setForeground(Color.LIGHT_GRAY);
 			teamnameField.setFont(new Font("Tahoma", Font.PLAIN, 25));
 			teamnameField.setText("Please enter your team name");
-			teamnameField.setBounds(364, 521, 421, 50);
+			teamnameField.setBounds(364, 443, 421, 50);
 			getContentPane().add(teamnameField);
 			teamnameField.setColumns(10);
+			
+
+
 			
 
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		}
-	
-	
-
 	}
 	
 

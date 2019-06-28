@@ -1,13 +1,9 @@
-package Hok;
-
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -36,11 +32,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.swing.JLabel;
 public class Addmember extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	
 	/**
 	 * Launch the application.
 	 */
@@ -56,7 +52,7 @@ public class Addmember extends JFrame {
 			}
 		});
 	}
-
+	// get MID from the name of members to use in other jframe
 	public int getMID() {
 		int mid=0;
 		int selectRow = table.getSelectedRow();
@@ -79,23 +75,23 @@ public class Addmember extends JFrame {
 		return mid;
 	}
 	//display image football logo on Jlabel 
-		public void displayImage(JLabel label , int tid) throws SQLException, IOException, NullPointerException{
-			PreparedStatement st;
-			ResultSet rs;
-			String query = "select image from teamleader where tid = ?";
-			st = DBconnection.getConnection().prepareStatement(query);
-			st.setInt(1, tid);
-			rs = st.executeQuery();
-			if (rs.next()) {
-				BufferedImage im = ImageIO.read(rs.getBinaryStream("image"));
-				Image dimg = im.getScaledInstance(label.getWidth(), label.getHeight(),
-				        Image.SCALE_SMOOTH);
-				ImageIcon icon = new ImageIcon(dimg);
-				label.setIcon(icon);
-				
-			}
+	public void displayImage(JLabel label , int tid) throws SQLException, IOException, NullPointerException{
+		PreparedStatement st;
+		ResultSet rs;
+		String query = "select imageLogo from teamleader where tid = ?";
+		st = DBconnection.getConnection().prepareStatement(query);
+		st.setInt(1, tid);
+		rs = st.executeQuery();
+		if (rs.next()) {
+			BufferedImage im = ImageIO.read(rs.getBinaryStream("imageLogo"));
+			Image dimg = im.getScaledInstance(label.getWidth(), label.getHeight(),
+			        Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(dimg);
+			label.setIcon(icon);
 			
 		}
+		
+	}
 
 
 	/**
@@ -105,7 +101,7 @@ public class Addmember extends JFrame {
 
 	}
 	public Addmember(int tid) {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(1080,720);
 		setResizable(false);
@@ -132,7 +128,7 @@ public class Addmember extends JFrame {
 				int selectRow = table.getSelectedRow();
 				if (selectRow >= 0) {
 					TableModel model = table.getModel();
-					Updateinfo update = new Updateinfo(selectRow , model , getMID() , table , tid);
+					Updateinfo update = new Updateinfo(getMID() , tid,table);
 					update.setVisible(true);
 				}
 				else {
@@ -226,6 +222,7 @@ public class Addmember extends JFrame {
 		table.setAlignmentX(CENTER_ALIGNMENT);
 		table.setAlignmentY(CENTER_ALIGNMENT);
 		scrollPane.setViewportView(table);
+
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(270, 0, 533, 149);
 		contentPane.add(lblNewLabel);
