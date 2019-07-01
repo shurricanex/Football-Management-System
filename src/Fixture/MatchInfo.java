@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Home.DBconnection;
+import member.DBconnection;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JLabel;

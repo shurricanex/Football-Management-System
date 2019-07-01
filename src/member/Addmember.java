@@ -1,4 +1,4 @@
-package Hok;
+package member;
 
 import java.awt.BorderLayout;
 

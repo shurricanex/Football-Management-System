@@ -13,7 +13,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import Home.DBconnection;
+import member.DBconnection;
 import myMenu.Menu;
 import net.proteanit.sql.DbUtils;
 

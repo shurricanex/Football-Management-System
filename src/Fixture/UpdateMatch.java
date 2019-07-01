@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 
-import Home.DBconnection;
+import member.DBconnection;
 import net.proteanit.sql.DbUtils;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

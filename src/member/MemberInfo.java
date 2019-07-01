@@ -1,40 +1,38 @@
-package Hok;
+package member;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+
+import net.proteanit.sql.DbUtils;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableModel;
-
-import net.proteanit.sql.DbUtils;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.sql.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-public class Updateinfo extends JFrame {
+public class MemberInfo extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField nameField;
 	private JTextField ageField;
 	private JTextField heightField;
 	private JTextField shirtField;
+
 
 	/**
 	 * Launch the application.
@@ -43,7 +41,7 @@ public class Updateinfo extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Updateinfo frame = new Updateinfo();
+					MemberInfo frame = new MemberInfo();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,36 +49,6 @@ public class Updateinfo extends JFrame {
 			}
 		});
 	}
-	
-	
-	public boolean checkShirtnumber(int shirtnumber , JTable table) throws SQLException{
-		int selectRow = table.getSelectedRow();
-		TableModel model = table.getModel();
-		// get mid of selected row
-		String shirtnumber1 = model.getValueAt(selectRow, 3).toString();
-		String name = model.getValueAt(selectRow, 3).toString();
-		int shirtnumber2 = Integer.parseInt(shirtnumber1);
-		PreparedStatement st;
-		ResultSet rs;
-		String query= "select * from member where shirtnumber = ?";
-		st = DBconnection.getConnection().prepareStatement(query);
-		st.setInt(1, shirtnumber);
-		rs = st.executeQuery();
-		if(rs.next()) {
-			if(rs.getInt(4)==shirtnumber2 && rs.getString(3)==name ) {
-				return false;
-			}
-			else {
-			JOptionPane.showMessageDialog(null,"This shirt number is already taken");
-			return true;
-			}
-		}
-		else {
-			return false;
-		}
-	}
-
-	
 	public boolean verifyField() {
 		String name = nameField.getText();
 		String age= ageField.getText();
@@ -94,13 +62,50 @@ public class Updateinfo extends JFrame {
 			return true;
 		}
 	}
-public Updateinfo() {
-	
-}
+	public boolean checkShirtnumber(int tid,int shirtnumber) throws SQLException{
+		PreparedStatement st;
+		ResultSet rs;
+		String query= "select * from member where shirtnumber = ? and tid=?";
+		st = DBconnection.getConnection().prepareStatement(query);
+		st.setInt(1, shirtnumber);
+		st.setInt(2, tid);
+		rs = st.executeQuery();
+		if(rs.next()) {
+			JOptionPane.showMessageDialog(null,"This shirt number is already taken");
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
 	/**
 	 * Create the frame.
 	 */
-	public Updateinfo(int selectRow , TableModel model ,int mid , JTable table , int tid) {
+	
+	public void displayJtableInfo(int tid , JTable table) {
+		PreparedStatement st;
+		ResultSet rs;
+		String query= "SELECT `name` as `Name`,`height` as `Height`,`age` as `Age`,`ShirtNumber` as `ShirtNumber` FROM `member` WHERE `tid` = ?";
+		try {
+			st = DBconnection.getConnection().prepareStatement(query);
+			st.setInt(1, tid);
+			rs = st.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	public MemberInfo() {
+
+	}
+	
+	public MemberInfo(int tid , JTable table) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setSize(500,620);
@@ -130,65 +135,62 @@ public Updateinfo() {
 		lblNewLabel_3.setBounds(0, 382, 176, 58);
 		contentPane.add(lblNewLabel_3);
 		
-		JButton btnNewButton = new JButton("Update");
+		JButton btnNewButton = new JButton("Add");
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent e) {
 				String name = nameField.getText();
 				String age1 = ageField.getText();
 				String height1 = heightField.getText();
-				String shirtnumber1  = shirtField.getText();
-				if(verifyField()) {
-					int  age= Integer.parseInt(age1);
-					int height = Integer.parseInt(height1);
-					int shirtnumber = Integer.parseInt(shirtnumber1);
+				String shirtnumber1 = shirtField.getText();
+					PreparedStatement st;
+					String insertquery = "INSERT INTO `member`(`tid`,`name`, `height`, `age`, `ShirtNumber`) VALUES (?,?,?,?,?)";
+					if (verifyField()) {
+						int age = Integer.parseInt(age1);
+						int height = Integer.parseInt(height1);
+						int shirtnumber = Integer.parseInt(shirtnumber1);
 					try {
-						if(!checkShirtnumber(shirtnumber , table)) {
-							PreparedStatement st;
-							String query = "UPDATE `member` SET `name`=?,`height`=?,`age`=?,`ShirtNumber`=? WHERE `mid` = ?";
+						if(!checkShirtnumber(tid,shirtnumber)) {
 							try {
-								st = DBconnection.getConnection().prepareStatement(query);
-								st.setString(1, name);
-								st.setInt(2, height);
-								st.setInt(3, age);
-								st.setInt(4, shirtnumber);
-								st.setInt(5, mid);
+								st = DBconnection.getConnection().prepareStatement(insertquery);
+								st.setInt(1, tid);
+								st.setString(2, name);
+								st.setInt(3, height);
+								st.setInt(4, age);
+								st.setInt(5,shirtnumber);
 								if(st.executeUpdate() != 0) {
-									JOptionPane.showMessageDialog(null, "Update successfully");
+									JOptionPane.showMessageDialog(null,"Successfully Added");
 									dispose();
-									MemberInfo member1= new MemberInfo(tid , table);
-									member1.displayJtableInfo(tid, table);
+									displayJtableInfo(tid , table);
+
 								}
+
 								
-							} catch (SQLException e) {
+							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								e1.printStackTrace();
 							}
 						}
-					} catch (HeadlessException e) {
+					} catch (HeadlessException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SQLException e) {
+						e1.printStackTrace();
+					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
 				}
+			}
+
+				
 				
 				
 				
 			}
-		});
+);
 		btnNewButton.setFont(new Font("Arial Black", Font.PLAIN, 20));
 		btnNewButton.setBounds(162, 474, 162, 66);
 		contentPane.add(btnNewButton);
 		
 		nameField = new JTextField();
-		nameField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				nameField.selectAll();
-			}
-		});
 		nameField.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		nameField.setBounds(148, 58, 270, 48);
 		contentPane.add(nameField);
@@ -203,12 +205,6 @@ public Updateinfo() {
 				}
 			}
 		});
-		ageField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				ageField.selectAll(); 
-			}
-		});
 		ageField.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		ageField.setBounds(148, 164, 270, 48);
 		contentPane.add(ageField);
@@ -221,12 +217,7 @@ public Updateinfo() {
 				if(!Character.isDigit(e.getKeyChar())) {
 					e.consume();
 				}
-			}
-		});
-		heightField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				heightField.selectAll();
+				
 			}
 		});
 		heightField.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -238,31 +229,21 @@ public Updateinfo() {
 		shirtField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				if(!Character.isDigit(e.getKeyChar()) || shirtField.getText().length()>1) {
+				int fieldlength = shirtField.getText().length();
+				if(fieldlength>1) {
 					e.consume();
 				}
-			}
-		});
-		
-		//placeholder get data from the selected row
-		
-		shirtField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				shirtField.selectAll();
+				
+				if(!Character.isDigit(e.getKeyChar())) {
+					e.consume();
+				}
 			}
 		});
 		shirtField.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		shirtField.setBounds(148, 389, 270, 48);
 		contentPane.add(shirtField);
 		shirtField.setColumns(10);
-		nameField.setText(model.getValueAt(selectRow, 0).toString());
-		ageField.setText(model.getValueAt(selectRow,1).toString());
-		heightField.setText(model.getValueAt(selectRow, 2).toString());
-		shirtField.setText(model.getValueAt(selectRow, 3).toString());
-		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
-
 }

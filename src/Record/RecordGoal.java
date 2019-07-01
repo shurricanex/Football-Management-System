@@ -9,9 +9,9 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 
+import member.Addmember;
+import member.DBconnection;
 import myMenu.Menu;
-import Hok.Addmember;
-import Hok.DBconnection;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;

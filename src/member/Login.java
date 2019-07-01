@@ -1,6 +1,7 @@
-package Home;
+package member;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -9,7 +10,10 @@ import javax.swing.SwingConstants;
 import myMenu.Menu;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -24,7 +28,7 @@ import javax.swing.JPasswordField;
 import java.sql.*;
 public class Login {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 
@@ -43,6 +47,25 @@ public class Login {
 			}
 		});
 	}
+	public int getTID() {
+		String username = usernameField.getText();
+		PreparedStatement st;
+		ResultSet rs;
+		int tid=0;
+		String query = "SELECT `tid` FROM `teamleader` WHERE `username`=?";
+		try {
+			st = DBconnection.getConnection().prepareStatement(query);
+			st.setString(1, username);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				tid = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tid;
+	}
 
 	/**
 	 * Create the application.
@@ -57,6 +80,7 @@ public class Login {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setSize(1080, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,9 +124,21 @@ public class Login {
 					rs = st.executeQuery();
 					if(rs.next()) {
 						//Show new form 
-						JOptionPane.showMessageDialog(frame, "Login Success");
-						frame.dispose();
-						new Menu().show();
+//						Addmember member= new Addmember(getTID());
+//						member.setVisible(true);
+						frame.setVisible(false);
+						Menu menu = new Menu(getTID());
+						menu.setVisible(true);
+						if(getTID()!=36) {
+//							menu.panel_13.setVisible(false);
+							menu.btnDelete.setVisible(false);
+							menu.btnDisplay.setVisible(false);
+							menu.btnUpdate.setVisible(false);
+							menu.addMatch.setVisible(false);
+						}
+						else {
+							menu.panel_13.setVisible(false);
+						}
 					}
 					else {
 						JOptionPane.showMessageDialog(frame, "Incorrect username or password","Error login", 2);
@@ -142,8 +178,8 @@ public class Login {
 		JButton btnSignUp = new JButton("Sign Up");
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SignUp signUp= new SignUp();
-				signUp.setVisible(true);
+				SignUp signup = new SignUp();
+				signup.setVisible(true);
 			}
 		});
 		btnSignUp.addFocusListener(new FocusAdapter() {
@@ -163,5 +199,8 @@ public class Login {
 		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSignUp.setBounds(569, 445, 191, 75);
 		frame.getContentPane().add(btnSignUp);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 	}
+
 }

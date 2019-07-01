@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import com.mysql.cj.xdevapi.PreparableStatement;
 
-import Hok.DBconnection;
+import member.DBconnection;
 
 public class RecordMatchScore {
 

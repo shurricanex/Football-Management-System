@@ -1,4 +1,4 @@
-package Home;
+package member;
 
 
 import java.awt.EventQueue;
@@ -6,11 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,6 +25,10 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.*;
 
 
@@ -28,7 +38,7 @@ public class SignUp extends JFrame {
 	private JTextField unameField;
 	 private JTextField phonenumberField;
 	 private JPasswordField passwordField;
-	 
+	 String image_path = null;
 	 
 	 // check the field input if they are right or wrong
 	 public boolean verifyField()
@@ -97,6 +107,7 @@ public class SignUp extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setResizable(false);
 		setSize(1080,720);
 		getContentPane().setLayout(null);
 		
@@ -106,7 +117,7 @@ public class SignUp extends JFrame {
 			JLabel lblSignUp = new JLabel("Sign Up");
 			lblSignUp.setBackground(Color.GREEN);
 			lblSignUp.setFont(new Font("Tahoma", Font.PLAIN, 30));
-			lblSignUp.setBounds(464, -13, 295, 127);
+			lblSignUp.setBounds(464, 0, 110, 114);
 			getContentPane().add(lblSignUp);
 			
 			JLabel lblUsername = new JLabel("Username :");
@@ -179,7 +190,32 @@ public class SignUp extends JFrame {
 
 				}
 			});
+			JLabel lblPath = new JLabel("Path");
+			lblPath.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			lblPath.setBounds(880,600, 433, 16);
+			getContentPane().add(lblPath);
 			
+			JButton btnNewButton = new JButton("Upload Logo");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					JFileChooser chooser = new JFileChooser();
+					chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+					
+					FileNameExtensionFilter extension = new FileNameExtensionFilter("*Images",".jpg",".png",".jpeg");
+					chooser.addChoosableFileFilter(extension);
+					int result = chooser.showSaveDialog(null);
+					if(result == JFileChooser.APPROVE_OPTION) {
+						File selectedFile = chooser.getSelectedFile();
+						String path = selectedFile.getAbsolutePath();
+						lblPath.setText(path);
+						image_path = path;
+					}
+
+				}
+			});
+			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			btnNewButton.setBounds(800, 520, 200, 50);
+			getContentPane().add(btnNewButton);
 			
 			JButton btnSignUp = new JButton("Sign Up");
 			btnSignUp.addActionListener(new ActionListener() {
@@ -194,13 +230,30 @@ public class SignUp extends JFrame {
 						try {
 							if(!checkUsername(username)) {
 								PreparedStatement st;
-								String insertQuery= "INSERT INTO `teamleader`(`team_name`, `username`, `password`, `phonenumber`) VALUES (?,?,?,?)";
+								String insertQuery= "INSERT INTO `teamleader`(`team_name`, `username`, `password`, `phonenumber`, `image`) VALUES (?,?,?,?,?)";
+								
 								st= DBconnection.getConnection().prepareStatement(insertQuery);
 								
 								st.setString(1, teamname);
 								st.setString(2, username);
 								st.setString(3,	password );
 								st.setString(4, phonenumber);
+								try {
+									if(image_path == null) {
+										File file = new File("/FootballMS/src/Hok/default logo.jpg");
+										InputStream image = new FileInputStream(file);
+										st.setBlob(5, image);
+									}
+									else {
+										InputStream image = new FileInputStream(new File(image_path));
+										st.setBlob(5, image);
+									}
+									
+								} catch (FileNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							
 								if(st.executeUpdate() != 0) {
 									
 									JOptionPane.showMessageDialog(null,"Your account has been created successfully !");
@@ -224,6 +277,51 @@ public class SignUp extends JFrame {
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						}
+						PreparedStatement st1;
+						ResultSet rs;
+                        int tid=0;
+                        String name="";					
+						String queryToGet = "SELECT `tid`,`team_name` FROM `teamleader` WHERE `username`=?";
+					
+						try {
+							st1= DBconnection.getConnection().prepareStatement(queryToGet);
+						
+							// for query 
+							st1.setString(1, username);
+							//end query 
+							rs = st1.executeQuery();
+							if(rs.next()) {
+								tid = rs.getInt(1);
+							    name = rs.getString(2);	
+							}
+							
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						try {
+							String queryToInsert =  "INSERT INTO `team`(`tid`,`match_played`,`won`,`draw`,`lost`,`gf`,`gd`,`point`,`pos`,`team_name`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+//							String queryToInsert =  "INSERT INTO `team`(`tid`,`team_name`)VALUES(?,?)";
+							PreparedStatement st2 = DBconnection.getConnection().prepareStatement(queryToInsert);
+//							 System.out.println(tid+" "+name);
+							 st2.setInt(1, tid);
+								st2.setInt(2,0);
+								 st2.setInt(3, 0);
+								 st2.setInt(4, 0);
+								 st2.setInt(5, 0);
+								 st2.setInt(6, 0);
+								 st2.setInt(7, 0);
+								 st2.setInt(8, 0);
+								 st2.setInt(9, 0);
+								 st2.setString(10, name);
+								 st2.executeUpdate();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							
+
+							
 						}
 					}
 					
@@ -338,7 +436,8 @@ public class SignUp extends JFrame {
 			teamnameField.setColumns(10);
 			
 
-
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		}
 	
 	
